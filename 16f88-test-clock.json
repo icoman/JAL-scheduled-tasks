@@ -1,0 +1,24 @@
+{
+    "cpufreq": 4,
+    "initJALCode": "-- 4k words flash, hw USART\n\n\n;\n; for 16F88\n;\n-- initJALCode\n\ninclude print\ninclude delay\n\nconst serial_hw_baudrate = 19200\ninclude serial_hardware\n\nif defined(serial_sw_init) == true then\n   -- use software usart interface\n   alias debug_out is serial_sw_data\nelse\n   -- use hardware usart interface\n   alias debug_out is serial_hw_data\nend if\n\nprocedure print(byte in str[]) is\n    print_string(debug_out,str)\nend procedure\n\nprocedure println(byte in str[]) is\n   debug_out = \"\\r\"\n   debug_out = \"\\n\"\n   print(str)\nend procedure\n\n-- initialize PIC\n-- set OSCCON if needed\nif target_clock == 4_000_000  then\n   OSCCON = 108 -- 4 mhz for 16F88\nend if\nif target_clock == 8_000_000  then\n   OSCCON = 124 -- 8 mhz for 16F88\nend if\n\nanalog_off()\nenable_digital_io() -- make all pins digital I/O\n\nif defined(serial_hw_init) == true then\n   serial_hw_init()\nend if\n\ndelay_1ms(300)\nprintln(\"Start program \")\nif target_clock == 4_000_000  then\n  print(\"4 MHz\")\nend if\nif target_clock == 8_000_000  then\n  print(\"8 MHz\")\nend if\nprintln(\"\\r\\n\")\n\n;clock task\nvar volatile byte second = 1\nvar volatile byte minute = 0\nvar volatile word hour = 0\n\n\n",
+    "inittmr0": 6,
+    "picmodel": 0,
+    "prescaler": 2,
+    "task_list": [
+        {
+            "body": "second = second + 1\nif second == 60 then\n  second = 0\n  minute = minute + 1\n  println(\"one minute\")\n  if minute == 60 then\n    minute = 0\n    hour = hour + 1\n    println(\"one hour\")\n  end if\nend if\nif 0 == second % 2 then \n   debug_out = \"/\"\nelse\n   debug_out = \"\\\\\"\nend if\n",
+            "name": "Clock Task",
+            "period": 1000.0
+        },
+        {
+            "body": "println(\"Half minute\")",
+            "name": "Task half minute",
+            "period": 30000.0
+        },
+        {
+            "body": "println(\"Hour: \")\nprint_word_dec(debug_out,hour)\ndebug_out = \":\"\nprint_byte_dec(debug_out,minute)\ndebug_out = \":\"\nprint_byte_dec(debug_out,second)",
+            "name": "Task print time",
+            "period": 10000.0
+        }
+    ]
+}

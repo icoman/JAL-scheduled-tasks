@@ -1,0 +1,24 @@
+{
+    "cpufreq": 4,
+    "initJALCode": "-- 4k words flash, hw USART\n\nanalog_off()\nTRISA=0\nTRISB=0\nPORTA=0\nPORTB=0\n\nif target_clock == 4_000_000  then\n   OSCCON = 108 -- 4 mhz for 16F88\nend if\nif target_clock == 8_000_000  then\n   OSCCON = 124 -- 8 mhz for 16F88\nend if\n\n\n",
+    "inittmr0": 6,
+    "picmodel": 0,
+    "prescaler": 0,
+    "task_list": [
+        {
+            "body": "asm nop; Task 1",
+            "name": "Task 1",
+            "period": 1000.0
+        },
+        {
+            "body": "asm nop ; Task 2\nasm nop",
+            "name": "Task 2",
+            "period": 15000.0
+        },
+        {
+            "body": "asm nop; Task 3",
+            "name": "Task 3",
+            "period": 20000.0
+        }
+    ]
+}
