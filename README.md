@@ -20,4 +20,6 @@ License-free software.
 
 Feel free to use this software for both personal and commercial usage.
 
+Don't forget to update the config file (config.json) with path to your JAL compiler.
+
 Bonus: **cx_freeze** and **pyinstaller** scripts.
