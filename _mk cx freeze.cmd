@@ -9,7 +9,7 @@ rem
 
 SET DIR=App
 rd %DIR% /s /q
-c:\Python27\python c:\Python27\Scripts\cxfreeze --install-dir=%DIR% main.py
+c:\Python27\python c:\Python27\Scripts\cxfreeze --base-name=Win32GUI --install-dir=%DIR% main.py
 
 rem copy needed files
 copy *.rsrc.py %DIR%\
